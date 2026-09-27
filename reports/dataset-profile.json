@@ -1,0 +1,117 @@
+{
+  "file": "IoTProcessed_Data.csv",
+  "sha256": "b6485b4322662ec6beeb986bf4adf2dfccfd3c3cf2e0bbe514439d3b517e8a82",
+  "source_timezone_assumption": "UTC",
+  "raw_rows": 37922,
+  "valid_rows": 37920,
+  "invalid_rows": [
+    {
+      "csv_line": 14351,
+      "reason": "time data '' does not match format '%Y-%m-%d %H:%M:%S'"
+    },
+    {
+      "csv_line": 14352,
+      "reason": "time data '' does not match format '%Y-%m-%d %H:%M:%S'"
+    }
+  ],
+  "start_utc": "2023-11-27T06:26:00+00:00",
+  "end_utc": "2024-03-30T05:24:00+00:00",
+  "unique_source_timestamps": 28682,
+  "extra_rows_at_duplicate_timestamps": 9238,
+  "duplicate_timestamp_groups": 2972,
+  "conflicting_timestamp_groups": 2972,
+  "backward_steps_in_file": 3067,
+  "max_timestamp_adjustment_ns": 9,
+  "most_common_unique_timestamp_gaps_seconds": [
+    [
+      300,
+      23815
+    ],
+    [
+      60,
+      3511
+    ],
+    [
+      120,
+      420
+    ],
+    [
+      240,
+      385
+    ],
+    [
+      180,
+      218
+    ],
+    [
+      360,
+      214
+    ],
+    [
+      600,
+      44
+    ],
+    [
+      900,
+      12
+    ],
+    [
+      480,
+      7
+    ],
+    [
+      1800,
+      3
+    ]
+  ],
+  "fields": {
+    "temperature": {
+      "min": 3.0,
+      "max": 41.0
+    },
+    "humidity": {
+      "min": 0.0,
+      "max": 100.0
+    },
+    "water_level": {
+      "min": 0.0,
+      "max": 100.0
+    },
+    "nitrogen": {
+      "min": 0.0,
+      "max": 255.0
+    },
+    "phosphorus": {
+      "min": 0.0,
+      "max": 255.0
+    },
+    "potassium": {
+      "min": 0.0,
+      "max": 259.0
+    },
+    "fan_off": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "fan_on": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "watering_pump_off": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "watering_pump_on": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "water_pump_off": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "water_pump_on": {
+      "min": 0.0,
+      "max": 1.0
+    }
+  }
+}

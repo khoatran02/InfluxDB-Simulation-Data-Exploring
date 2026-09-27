@@ -1,0 +1,16 @@
+[project]
+name = "influxdb-explore"
+version = "0.1.0"
+description = "Replay IoT agriculture CSV as live InfluxDB measurements"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["influxdb-client>=1.37"]
+
+[project.scripts]
+influx-replay = "influxdb_explore.replay:main"
+influx-profile = "influxdb_explore.dataset:main"
+influx-query = "influxdb_explore.query:main"
+
+[build-system]
+requires = ["uv_build>=0.12.6,<0.13.0"]
+build-backend = "uv_build"

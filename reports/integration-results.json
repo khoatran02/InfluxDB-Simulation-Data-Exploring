@@ -1,0 +1,22 @@
+{
+  "server_version": "v2.7.12",
+  "checks": {
+    "fast_live_and_partial_batch_count": 13,
+    "historical_count": 37920,
+    "historical_reimport_count": 37920,
+    "temperature_mean_matches_csv": 18.76004746835443,
+    "query_result_rows": {
+      "01_live_trends.flux": 2,
+      "02_historical_count.flux": 1,
+      "03_hourly_history.flux": 6489,
+      "04_threshold_events.flux": 20,
+      "05_actuator_fraction.flux": 303,
+      "06_latest_live.flux": 3
+    },
+    "query_cli": "passed",
+    "same_timestamp_overwrite": "2 writes -> 1 stored point, value=2.0",
+    "downsample_write_rows": 6
+  },
+  "historical_import_process_seconds": 4.54,
+  "dataset_sha256": "b6485b4322662ec6beeb986bf4adf2dfccfd3c3cf2e0bbe514439d3b517e8a82"
+}
