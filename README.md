@@ -72,3 +72,31 @@ uv run --env-file .env python tests/integration_check.py
 ```
 
 The stack deliberately pins InfluxDB v2 because these exercises use its Flux API and built-in UI. Do not replace the image with `influxdb:latest`; consult the [official v2 installation documentation](https://docs.influxdata.com/influxdb/v2/install/) when changing versions.
+
+## Retention and downsampling
+
+| Mechanism | What it does | Where |
+| --- | --- | --- |
+| Bucket retention (TTL) | Each bucket has a time-to-live. Points older than the TTL are rejected on write (HTTP 422) and expired data is deleted automatically by the retention enforcer (about every 30 min). Example: raw bucket 7 days, summary bucket 365 days. | `BucketRetentionRules` in the demo; `DOCKER_INFLUXDB_INIT_RETENTION: "0"` in `docker-compose.yml` keeps the main `agriculture` bucket unlimited |
+| Downsampling | A Flux task aggregates high-frequency raw data into larger windows (here 5 min to 1 h) with `mean`, `max`, `min`, `sum` via `aggregateWindow`, and writes to the long-TTL bucket with `to()`. | `queries/08_downsample_multi_agg.flux` |
+
+```bash
+# Creates temporary 7-day/365-day buckets, shows TTL rejection and runs the downsample (cleans up afterwards).
+uv run --env-file .env python benchmarks/retention_downsampling_demo.py
+```
+
+Measured output: 1,008 raw 5-minute points become 85 hourly rows per aggregate (about 12x fewer); a point 10 days old is rejected by the 7-day bucket. `sum` only makes sense for additive quantities (for example counting fan-on samples), not for temperature; it is included to show the function. Do not put a short TTL on the `agriculture` bucket: it holds the courses
+
+## Retention and downsampling
+
+| Mechanism | What it does | Where |
+| --- | --- | --- |
+| Bucket retention (TTL) | Each bucket has a time-to-live. Points older than the TTL are rejected on write (HTTP 422) and expired data is deleted automatically by the retention enforcer (about every 30 min). Example: raw bucket 7 days, summary bucket 365 days. | `BucketRetentionRules` in the demo; `DOCKER_INFLUXDB_INIT_RETENTION: "0"` in `docker-compose.yml` keeps the main `agriculture` bucket unlimited |
+| Downsampling | A Flux task aggregates high-frequency raw data into larger windows (here 5 min to 1 h) with `mean`, `max`, `min`, `sum` via `aggregateWindow`, and writes to the long-TTL bucket with `to()`. | `queries/08_downsample_multi_agg.flux` |
+
+```bash
+# Creates temporary 7-day/365-day buckets, shows TTL rejection and runs the downsample (cleans up afterwards).
+uv run --env-file .env python benchmarks/retention_downsampling_demo.py
+```
+
+Measured output: 1,008 raw 5-minute points become 85 hourly rows per aggregate (about 12x fewer); a point 10 days old is rejected by the 7-day bucket. `sum` only makes sense for additive quantities (for example counting fan-on samples), not for temperature; it is included to show the function. Do not put a short TTL on the `agriculture` bucket: it holds the course's historical evidence.
