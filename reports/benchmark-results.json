@@ -1,0 +1,657 @@
+{
+  "environment": {
+    "date": "2026-10-03T13:50:33.804481+00:00",
+    "host": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "cpu": "AMD Ryzen 5 4600H with Radeon Graphics",
+    "cpu_threads": 12,
+    "ram_total_mb": "30942",
+    "influxdb": "InfluxDB v2.7.12 (git: ec9dcde5d6) build_date: 2025-05-20T22:48:39Z",
+    "docker_image": "influxdb-explore-influxdb",
+    "docker_limits": "mem=0 nanocpus=0 (0 = unlimited)",
+    "container_idle_before": "0.05% | 285.5MiB / 30.22GiB",
+    "loadavg_before": [
+      0.67236328125,
+      0.51220703125,
+      0.302734375
+    ],
+    "python_client": "influxdb-client (synchronous write, localhost, same host)",
+    "container_idle_after": "0.25% | 362.7MiB / 30.22GiB",
+    "loadavg_after": [
+      1.09521484375,
+      1.2509765625,
+      0.71728515625
+    ]
+  },
+  "write": [
+    {
+      "dataset": "original",
+      "csv": "datasets/iot-agriculture-2024/IoTProcessed_Data.csv",
+      "raw_rows": 37922,
+      "points": 37920,
+      "csv_bytes": 2476825,
+      "line_protocol_bytes": 11566260,
+      "batch_size": 100,
+      "runs": [
+        {
+          "seconds": 5.335122410000167,
+          "points_per_s": 7107.6157369740295,
+          "disk": {
+            "data": 34360697,
+            "wal": 2354694,
+            "total": 36715391
+          }
+        },
+        {
+          "seconds": 5.3228085519999695,
+          "points_per_s": 7124.058592291864,
+          "disk": {
+            "data": 34360697,
+            "wal": 2361534,
+            "total": 36722231
+          }
+        },
+        {
+          "seconds": 4.962323403000028,
+          "points_per_s": 7641.5817592773265,
+          "disk": {
+            "data": 34360697,
+            "wal": 2359229,
+            "total": 36719926
+          }
+        },
+        {
+          "seconds": 4.743852643000082,
+          "points_per_s": 7993.50292972398,
+          "disk": {
+            "data": 34360697,
+            "wal": 2360976,
+            "total": 36721673
+          }
+        },
+        {
+          "seconds": 5.457757704999949,
+          "points_per_s": 6947.908289380603,
+          "disk": {
+            "data": 34360697,
+            "wal": 2373502,
+            "total": 36734199
+          }
+        }
+      ],
+      "median_points_per_s": 7124.058592291864,
+      "min_points_per_s": 6947.908289380603,
+      "max_points_per_s": 7993.50292972398,
+      "median_disk_bytes": 36721673
+    },
+    {
+      "dataset": "original",
+      "csv": "datasets/iot-agriculture-2024/IoTProcessed_Data.csv",
+      "raw_rows": 37922,
+      "points": 37920,
+      "csv_bytes": 2476825,
+      "line_protocol_bytes": 11566260,
+      "batch_size": 500,
+      "runs": [
+        {
+          "seconds": 2.7064839080003367,
+          "points_per_s": 14010.798249311181,
+          "disk": {
+            "data": 34360697,
+            "wal": 2739566,
+            "total": 37100263
+          }
+        },
+        {
+          "seconds": 2.643559665000339,
+          "points_per_s": 14344.29511920819,
+          "disk": {
+            "data": 34360697,
+            "wal": 2688139,
+            "total": 37048836
+          }
+        },
+        {
+          "seconds": 2.7033379750000677,
+          "points_per_s": 14027.102918938224,
+          "disk": {
+            "data": 34360697,
+            "wal": 2740608,
+            "total": 37101305
+          }
+        },
+        {
+          "seconds": 2.7071590089999518,
+          "points_per_s": 14007.304289823736,
+          "disk": {
+            "data": 34360697,
+            "wal": 2700676,
+            "total": 37061373
+          }
+        },
+        {
+          "seconds": 2.6856477520000226,
+          "points_per_s": 14119.498721215648,
+          "disk": {
+            "data": 34360697,
+            "wal": 2718067,
+            "total": 37078764
+          }
+        }
+      ],
+      "median_points_per_s": 14027.102918938224,
+      "min_points_per_s": 14007.304289823736,
+      "max_points_per_s": 14344.29511920819,
+      "median_disk_bytes": 37078764
+    },
+    {
+      "dataset": "original",
+      "csv": "datasets/iot-agriculture-2024/IoTProcessed_Data.csv",
+      "raw_rows": 37922,
+      "points": 37920,
+      "csv_bytes": 2476825,
+      "line_protocol_bytes": 11566260,
+      "batch_size": 1000,
+      "runs": [
+        {
+          "seconds": 2.3143648239997674,
+          "points_per_s": 16384.62510610808,
+          "disk": {
+            "data": 34360697,
+            "wal": 3103149,
+            "total": 37463846
+          }
+        },
+        {
+          "seconds": 2.2798870270003135,
+          "points_per_s": 16632.40307564362,
+          "disk": {
+            "data": 34360697,
+            "wal": 3093347,
+            "total": 37454044
+          }
+        },
+        {
+          "seconds": 2.2942125690001376,
+          "points_per_s": 16528.54688025978,
+          "disk": {
+            "data": 34360697,
+            "wal": 3083292,
+            "total": 37443989
+          }
+        },
+        {
+          "seconds": 2.2855915840000307,
+          "points_per_s": 16590.890632190694,
+          "disk": {
+            "data": 34360697,
+            "wal": 3090556,
+            "total": 37451253
+          }
+        },
+        {
+          "seconds": 2.3272973510001975,
+          "points_per_s": 16293.577605673467,
+          "disk": {
+            "data": 34360697,
+            "wal": 3100645,
+            "total": 37461342
+          }
+        }
+      ],
+      "median_points_per_s": 16528.54688025978,
+      "min_points_per_s": 16293.577605673467,
+      "max_points_per_s": 16632.40307564362,
+      "median_disk_bytes": 37454044
+    },
+    {
+      "dataset": "original",
+      "csv": "datasets/iot-agriculture-2024/IoTProcessed_Data.csv",
+      "raw_rows": 37922,
+      "points": 37920,
+      "csv_bytes": 2476825,
+      "line_protocol_bytes": 11566260,
+      "batch_size": 5000,
+      "runs": [
+        {
+          "seconds": 1.4712644060000457,
+          "points_per_s": 25773.74933108986,
+          "disk": {
+            "data": 34360697,
+            "wal": 3583083,
+            "total": 37943780
+          }
+        },
+        {
+          "seconds": 1.400380099999893,
+          "points_per_s": 27078.36251029481,
+          "disk": {
+            "data": 34360697,
+            "wal": 3575729,
+            "total": 37936426
+          }
+        },
+        {
+          "seconds": 1.3061674349996792,
+          "points_per_s": 29031.500084833544,
+          "disk": {
+            "data": 34360697,
+            "wal": 3531703,
+            "total": 37892400
+          }
+        },
+        {
+          "seconds": 1.3465514959998472,
+          "points_per_s": 28160.8242333454,
+          "disk": {
+            "data": 34360697,
+            "wal": 3549901,
+            "total": 37910598
+          }
+        },
+        {
+          "seconds": 1.3346442619999834,
+          "points_per_s": 28412.06535678379,
+          "disk": {
+            "data": 34360697,
+            "wal": 3559794,
+            "total": 37920491
+          }
+        }
+      ],
+      "median_points_per_s": 28160.8242333454,
+      "min_points_per_s": 25773.74933108986,
+      "max_points_per_s": 29031.500084833544,
+      "median_disk_bytes": 37920491
+    },
+    {
+      "dataset": "extended_80k",
+      "csv": "datasets/iot-agriculture-2024/IoTProcessed_Data_80k.csv",
+      "raw_rows": 82000,
+      "points": 82000,
+      "csv_bytes": 5418132,
+      "line_protocol_bytes": 25198992,
+      "batch_size": 100,
+      "runs": [
+        {
+          "seconds": 11.75103061200025,
+          "points_per_s": 6978.111342528622,
+          "disk": {
+            "data": 35569676,
+            "wal": 5772698,
+            "total": 41342374
+          }
+        },
+        {
+          "seconds": 11.894239524000113,
+          "points_per_s": 6894.09355129775,
+          "disk": {
+            "data": 35569676,
+            "wal": 5787037,
+            "total": 41356713
+          }
+        },
+        {
+          "seconds": 11.912823455999842,
+          "points_per_s": 6883.338807367371,
+          "disk": {
+            "data": 35569676,
+            "wal": 5777032,
+            "total": 41346708
+          }
+        },
+        {
+          "seconds": 11.88449923600001,
+          "points_per_s": 6899.743806757053,
+          "disk": {
+            "data": 35569676,
+            "wal": 5779058,
+            "total": 41348734
+          }
+        },
+        {
+          "seconds": 11.790250390999972,
+          "points_per_s": 6954.89894452066,
+          "disk": {
+            "data": 35569676,
+            "wal": 5773422,
+            "total": 41343098
+          }
+        }
+      ],
+      "median_points_per_s": 6899.743806757053,
+      "min_points_per_s": 6883.338807367371,
+      "max_points_per_s": 6978.111342528622,
+      "median_disk_bytes": 41346708
+    },
+    {
+      "dataset": "extended_80k",
+      "csv": "datasets/iot-agriculture-2024/IoTProcessed_Data_80k.csv",
+      "raw_rows": 82000,
+      "points": 82000,
+      "csv_bytes": 5418132,
+      "line_protocol_bytes": 25198992,
+      "batch_size": 500,
+      "runs": [
+        {
+          "seconds": 5.856575767999857,
+          "points_per_s": 14001.355612616742,
+          "disk": {
+            "data": 35569676,
+            "wal": 6566918,
+            "total": 42136594
+          }
+        },
+        {
+          "seconds": 5.898743126000227,
+          "points_per_s": 13901.266464471715,
+          "disk": {
+            "data": 35569676,
+            "wal": 6546893,
+            "total": 42116569
+          }
+        },
+        {
+          "seconds": 5.840463783999894,
+          "points_per_s": 14039.980904366052,
+          "disk": {
+            "data": 35569676,
+            "wal": 6543001,
+            "total": 42112677
+          }
+        },
+        {
+          "seconds": 5.811747115999879,
+          "points_per_s": 14109.35444425172,
+          "disk": {
+            "data": 35569676,
+            "wal": 6516080,
+            "total": 42085756
+          }
+        },
+        {
+          "seconds": 5.894219963000069,
+          "points_per_s": 13911.934151548568,
+          "disk": {
+            "data": 35569676,
+            "wal": 6523758,
+            "total": 42093434
+          }
+        }
+      ],
+      "median_points_per_s": 14001.355612616742,
+      "min_points_per_s": 13901.266464471715,
+      "max_points_per_s": 14109.35444425172,
+      "median_disk_bytes": 42112677
+    },
+    {
+      "dataset": "extended_80k",
+      "csv": "datasets/iot-agriculture-2024/IoTProcessed_Data_80k.csv",
+      "raw_rows": 82000,
+      "points": 82000,
+      "csv_bytes": 5418132,
+      "line_protocol_bytes": 25198992,
+      "batch_size": 1000,
+      "runs": [
+        {
+          "seconds": 4.961923203999959,
+          "points_per_s": 16525.850286013552,
+          "disk": {
+            "data": 35569676,
+            "wal": 7286661,
+            "total": 42856337
+          }
+        },
+        {
+          "seconds": 4.966322606999711,
+          "points_per_s": 16511.210907730056,
+          "disk": {
+            "data": 35569676,
+            "wal": 7237039,
+            "total": 42806715
+          }
+        },
+        {
+          "seconds": 5.028693414999907,
+          "points_per_s": 16306.42260977875,
+          "disk": {
+            "data": 35569676,
+            "wal": 7226577,
+            "total": 42796253
+          }
+        },
+        {
+          "seconds": 4.924161532999733,
+          "points_per_s": 16652.581246668953,
+          "disk": {
+            "data": 35569676,
+            "wal": 7202976,
+            "total": 42772652
+          }
+        },
+        {
+          "seconds": 4.668281880999984,
+          "points_per_s": 17565.348899290315,
+          "disk": {
+            "data": 35569676,
+            "wal": 7295311,
+            "total": 42864987
+          }
+        }
+      ],
+      "median_points_per_s": 16525.850286013552,
+      "min_points_per_s": 16306.42260977875,
+      "max_points_per_s": 17565.348899290315,
+      "median_disk_bytes": 42806715
+    },
+    {
+      "dataset": "extended_80k",
+      "csv": "datasets/iot-agriculture-2024/IoTProcessed_Data_80k.csv",
+      "raw_rows": 82000,
+      "points": 82000,
+      "csv_bytes": 5418132,
+      "line_protocol_bytes": 25198992,
+      "batch_size": 5000,
+      "runs": [
+        {
+          "seconds": 2.9596283040000344,
+          "points_per_s": 27706.181850327055,
+          "disk": {
+            "data": 35569676,
+            "wal": 8420492,
+            "total": 43990168
+          }
+        },
+        {
+          "seconds": 2.9585310030001892,
+          "points_per_s": 27716.457903211216,
+          "disk": {
+            "data": 35569676,
+            "wal": 8422712,
+            "total": 43992388
+          }
+        },
+        {
+          "seconds": 3.1050839919998907,
+          "points_per_s": 26408.30335387684,
+          "disk": {
+            "data": 35569676,
+            "wal": 8347280,
+            "total": 43916956
+          }
+        },
+        {
+          "seconds": 3.049559391999992,
+          "points_per_s": 26889.130349490246,
+          "disk": {
+            "data": 35569676,
+            "wal": 8435952,
+            "total": 44005628
+          }
+        },
+        {
+          "seconds": 3.022570706999886,
+          "points_per_s": 27129.224739093286,
+          "disk": {
+            "data": 35569676,
+            "wal": 8342389,
+            "total": 43912065
+          }
+        }
+      ],
+      "median_points_per_s": 27129.224739093286,
+      "min_points_per_s": 26408.30335387684,
+      "max_points_per_s": 27716.457903211216,
+      "median_disk_bytes": 43990168
+    }
+  ],
+  "query": [
+    {
+      "dataset": "original",
+      "points": 37920,
+      "range": [
+        "2023-11-27T06:26:00Z",
+        "2024-03-30T05:24:01Z"
+      ],
+      "window": "1h",
+      "fn": "mean",
+      "result_rows": 2163,
+      "verdict_under_100ms": true,
+      "n": 50,
+      "median_ms": 27.52099349982018,
+      "p95_ms": 46.59845630010294,
+      "min_ms": 19.405494000238832,
+      "max_ms": 52.05794800031072,
+      "mean_ms": 28.777899119968424
+    },
+    {
+      "dataset": "original",
+      "points": 37920,
+      "range": [
+        "2023-11-27T06:26:00Z",
+        "2024-03-30T05:24:01Z"
+      ],
+      "window": "1h",
+      "fn": "max",
+      "result_rows": 2163,
+      "verdict_under_100ms": true,
+      "n": 50,
+      "median_ms": 26.57504050011994,
+      "p95_ms": 39.11228850022324,
+      "min_ms": 19.29793699991933,
+      "max_ms": 49.173577000146906,
+      "mean_ms": 27.11800760004735
+    },
+    {
+      "dataset": "original",
+      "points": 37920,
+      "range": [
+        "2023-11-27T06:26:00Z",
+        "2024-03-30T05:24:01Z"
+      ],
+      "window": "1d",
+      "fn": "mean",
+      "result_rows": 101,
+      "verdict_under_100ms": true,
+      "n": 50,
+      "median_ms": 16.708092500266503,
+      "p95_ms": 18.63644389995897,
+      "min_ms": 7.125579999865295,
+      "max_ms": 29.169948000344448,
+      "mean_ms": 16.034894139975222
+    },
+    {
+      "dataset": "original",
+      "points": 37920,
+      "range": [
+        "2023-11-27T06:26:00Z",
+        "2024-03-30T05:24:01Z"
+      ],
+      "window": "1d",
+      "fn": "max",
+      "result_rows": 101,
+      "verdict_under_100ms": true,
+      "n": 50,
+      "median_ms": 16.678619499998604,
+      "p95_ms": 17.895554699975946,
+      "min_ms": 14.035065999905783,
+      "max_ms": 25.295065000136674,
+      "mean_ms": 16.77894988004482
+    },
+    {
+      "dataset": "extended_80k",
+      "points": 82000,
+      "range": [
+        "2023-11-27T06:26:00Z",
+        "2024-10-01T08:34:01Z"
+      ],
+      "window": "1h",
+      "fn": "mean",
+      "result_rows": 6606,
+      "verdict_under_100ms": true,
+      "n": 50,
+      "median_ms": 55.17706199998429,
+      "p95_ms": 89.52810775008402,
+      "min_ms": 47.75171600022077,
+      "max_ms": 91.36579999994865,
+      "mean_ms": 61.050955119981154
+    },
+    {
+      "dataset": "extended_80k",
+      "points": 82000,
+      "range": [
+        "2023-11-27T06:26:00Z",
+        "2024-10-01T08:34:01Z"
+      ],
+      "window": "1h",
+      "fn": "max",
+      "result_rows": 6606,
+      "verdict_under_100ms": true,
+      "n": 50,
+      "median_ms": 52.868824500137634,
+      "p95_ms": 87.62514775016825,
+      "min_ms": 45.49676900023769,
+      "max_ms": 89.13536800037036,
+      "mean_ms": 59.443599500018536
+    },
+    {
+      "dataset": "extended_80k",
+      "points": 82000,
+      "range": [
+        "2023-11-27T06:26:00Z",
+        "2024-10-01T08:34:01Z"
+      ],
+      "window": "1d",
+      "fn": "mean",
+      "result_rows": 286,
+      "verdict_under_100ms": true,
+      "n": 50,
+      "median_ms": 24.291318499990666,
+      "p95_ms": 25.29293499992491,
+      "min_ms": 11.361759999999776,
+      "max_ms": 45.390049000161525,
+      "mean_ms": 22.00373354002295
+    },
+    {
+      "dataset": "extended_80k",
+      "points": 82000,
+      "range": [
+        "2023-11-27T06:26:00Z",
+        "2024-10-01T08:34:01Z"
+      ],
+      "window": "1d",
+      "fn": "max",
+      "result_rows": 286,
+      "verdict_under_100ms": true,
+      "n": 50,
+      "median_ms": 24.123800499864956,
+      "p95_ms": 25.42232609994244,
+      "min_ms": 11.045861000184232,
+      "max_ms": 39.955504999852565,
+      "mean_ms": 22.050195799965877
+    }
+  ],
+  "query_container_stats": {
+    "original": "0.90% | 260.6MiB / 30.22GiB",
+    "extended_80k": "2.40% | 364.7MiB / 30.22GiB"
+  }
+}

@@ -1,53 +1,164 @@
-# Exploring InfluxDB with agriculture IoT data
+# Exploring InfluxDB with Agriculture IoT Data
 
-A course project using **InfluxDB OSS 2.7.12**, Python, and Flux to explore time-series ingestion, schema design, historical queries, live dashboards, duplicate points, and downsampling. The CSV is replayed sensor data; this project does not connect to physical sensors or train an AI model.
+A course project using **InfluxDB OSS 2.7.12**, Python (via `uv`), and Flux to explore time-series ingestion, schema design, historical queries, live dashboards, concurrency handling, and downsampling. 
 
-Start with [GUIDE.md](GUIDE.md) for the lab, dashboard instructions, report outline, and presentation script. See [the review](reports/REVIEW.md) for findings and verification evidence.
+This project simulates IoT sensor environments using recorded agriculture data. It does not connect to physical sensors or train AI models. The goal is to master InfluxDB operations for an AI-IoT curriculum.
 
-## Quick start
+See [GUIDE.md](GUIDE.md) for lab tutorials, dashboard setup instructions, report outlines, and presentation scripts. See [reports/REVIEW.md](reports/REVIEW.md) for initial dataset review findings.
 
-Requirements: Docker with Compose v2+, and [uv](https://docs.astral.sh/uv/). Run from this directory. `uv` uses Python 3.12 from `.python-version`.
+---
+
+## 🚀 Quick Start
+
+**Requirements:** Docker with Compose v2+, and [uv](https://docs.astral.sh/uv/) (Python package manager). `uv` will use Python 3.12 defined in `.python-version`.
+
+Run all commands from the root directory:
 
 ```bash
-# Populate the currently empty/missing local configuration, preserving any existing values.
+# 1. Populate the local environment configuration (preserves existing if present)
 if [ ! -s .env ]; then cp .env.example .env; fi
+
+# 2. Install dependencies via uv
 uv sync --locked
+
+# 3. Start the InfluxDB container in the background
 docker compose up -d --build --wait
 
-# Inspect data quality without a database connection.
+# 4. Profile the raw CSV dataset without hitting the database
 uv run influx-profile --output reports/dataset-profile.json
+```
 
-# Import all 37,920 valid observations with historical timestamps.
+Open InfluxDB UI at **<http://localhost:8086>**.
+- **Username:** `admin`
+- **Password:** `admin-password-123`
+*(Connections match `.env.example` defaults)*.
+
+---
+
+## 📊 Dataset Information
+
+### The Original Dataset
+The source CSV contains **37,922 rows** with observations for temperature, humidity, water level, soil nutrients (N, P, K), and binary actuator states (fans, pumps).
+- **Valid Rows:** 37,920 (spanning `2023-11-27` to `2024-03-30` in UTC).
+- **Handling Duplicate Timestamps:** The dataset contains ~9,238 observations that share the exact same timestamp. In InfluxDB, duplicate timestamps within the same series will overwrite data. This project avoids data loss by deterministically offsetting duplicates by up to **9 nanoseconds**.
+
+### The Synthetic 80k Extension
+To test InfluxDB at scale, we provide a tool to extend the timeline from March 2024 to October 2024.
+- **Run it:** `python3 datasets/iot-agriculture-2024/extend_to_80k.py`
+- **Result:** Drops anomalies, models daily temperature/humidity cycles, models asymmetric pump dynamics, and writes an 82,000-row continuation to `IoTProcessed_Data_80k.csv`. 
+
+> [!NOTE]
+> The 80k dataset is synthetic and uses a fixed `SEED = 42` for reproducibility. It is meant for performance benchmarking, not agronomic accuracy claims.
+
+---
+
+## 📥 Data Ingestion Strategies
+
+We use `influxdb-client` with `SYNCHRONOUS` batching to write data efficiently. 
+
+### 1. Batch Historical Import
+Ideal for massive data backfills. We disable artificial intervals (`--interval 0`) and use large batches.
+```bash
+# Insert all 37,920 rows. 
 uv run --env-file .env influx-replay --preserve-time --interval 0 --batch-size 500
-uv run --env-file .env influx-query queries/02_historical_count.flux
 
-# Replay one observation per second for a live dashboard.
+# Verify the count
+uv run --env-file .env influx-query queries/02_historical_count.flux
+```
+
+### 2. Live Replay (Stream Simulation)
+Ideal for testing live dashboards and dashboards updates.
+```bash
+# Ingest 1 observation per second for 120 seconds.
 uv run --env-file .env influx-replay --interval 1 --max-rows 120
 ```
 
-Open <http://localhost:8086>. Local demo login: `admin` / `admin-password-123`. Connection defaults match `.env.example`. Existing database volumes retain their original credentials; editing `.env` does not reset them.
+---
 
-The source has **37,922 rows**, two missing dates, and **9,238 extra observations at repeated timestamps**. Valid dates span **2023-11-27 to 2024-03-30**, assuming UTC. Historical duplicate timestamps receive deterministic offsets of up to **9 nanoseconds** so all valid readings survive. Original timestamps and CSV line numbers remain in fields. This offset is a storage convention, not sensor timing accuracy.
+## ⚡ Concurrency Load Testing
 
-## Synthetic 80k dataset
+To prove InfluxDB's capability in a real-world multi-sensor IoT network, we test high concurrency using **500 simultaneous POST requests** (simulating 500 devices hitting the database at the exact same millisecond). 
 
-[extend_to_80k.py](datasets/iot-agriculture-2024/extend_to_80k.py) extends the cleaned source (**28,682** unique-timestamp rows) to **82,000 rows** in [IoTProcessed_Data_80k.csv](datasets/iot-agriculture-2024/IoTProcessed_Data_80k.csv) by continuing the 5-minute cadence forward from `2024-03-30` to `2024-10-01`. Same columns and one-hot actuator encoding (`_ON` + `_OFF` = 1) as the source. Stdlib + numpy only, seeded (`SEED = 42`) for reproducibility.
+The load test specifically bypasses the standard InfluxDB Python client (avoiding GIL/thread-lock overheads) and uses standard library `urllib` to hit the API concurrently.
 
 ```bash
-python3 datasets/iot-agriculture-2024/extend_to_80k.py
+uv run --env-file .env python benchmarks/concurrent_requests.py --concurrency 500
+```
+**Results observed:**
+| Metric | Result |
+| --- | --- |
+| Success Rate (HTTP 204) | 500/500 (100.0%) |
+| Total Execution Time | 0.272 seconds |
+| API Throughput | 1837.9 requests/s |
+| Min Latency | 7.27 ms |
+| Median Latency (p50) | 13.16 ms |
+| 95th Percentile (p95) | 20.54 ms |
+| Max Latency | 26.30 ms |
+
+**Conclusion:** InfluxDB handled the simultaneous burst of 500 requests flawlessly, achieving sub-30ms latency even for the slowest requests under high concurrent load.
+
+---
+
+## 🕰️ Retention & Downsampling
+
+Time-series databases use retention limits and continuous queries (Tasks) to manage disk space. 
+We provide a standalone demonstration of this:
+
+```bash
+uv run --env-file .env python benchmarks/retention_downsampling_demo.py
 ```
 
-Strategy, in order:
+**What this demo does:**
+1. **Bucket TTL (Time-To-Live):** Creates a 7-day raw data bucket and proves that points 10 days old are actively rejected (HTTP 422) by the server.
+2. **Downsampling:** Runs a Flux task (`queries/08_downsample_multi_agg.flux`) that takes 1,008 raw 5-minute points and aggregates them into 1-hour windows (using `mean`, `max`, `min`, `sum`).
+3. **Storage Reduction:** Output rows are reduced by ~12x and routed to a 365-day retention bucket.
 
-1. **Clean** — drop empty/unparseable dates, clip `humidity`/`water_level` to 0–100 and `N`/`P`/`K` to ≤ 255 (the source contains a `K = 259` sensor glitch), deduplicate timestamps, sort. Keeps the original `tempreature` column spelling.
-<!-- 2. **Fit profiles on real data** — per-hour-of-day mean/std for temperature and humidity (daily cycle), a temperature→humidity linear coupling with residual noise, and the observed discrete `N`/`P`/`K` value pools (8–9 values each). -->
-3. **Extend the timeline** — generate one row per 5 minutes past the last real timestamp. Temperature = hourly mean + AR(1) smooth noise; humidity = mean-anchored temp coupling + hourly deviation; water level = mean-reverting walk around 70 with asymmetric pump dynamics (drains −4.0/step when the pump is ON, refills +1.5/step when OFF) so the level oscillates across the pump threshold; `N`/`P`/`K` hold constant for ~1–7 days then jump to another observed discrete value.
-4. **Rule-based actuators with noise** — thresholds are learned from the real data by maximizing Youden's J (currently: fan ON if temp > ~21, pump ON if water level < ~75, watering ON if humidity < ~52), then ~5% of decisions are flipped so behaviour is not perfectly deterministic.
-5. **Validate** — the script prints real-vs-synthetic mean/std for temperature, humidity mean, the fraction of water levels below the pump threshold, and ON-rates for all three actuators.
+---
 
-Use this file for scale, ingestion, and query-performance experiments. It is synthetic continuations data, not measured ground truth — do not use it for agronomic or sensor-accuracy claims.
+## 📈 Benchmark Results
 
-## Project map
+Extensive benchmarks were run natively (see `reports/BENCHMARK.md`). Below are the detailed findings regarding write throughput, storage sizes, and query latency:
+
+### 1. Write Throughput & Storage Footprint
+Writes were executed synchronously into a temporary bucket. The times reflect the client sending the request and receiving the server's ACK. 
+
+| Dataset | Total Points | Batch Size | Median (points/s) | Min–Max (points/s) | Storage Size (Bytes) |
+| --- | --- | --- | --- | --- | --- |
+| **Original CSV** | 37,920 | 100 | 7,124 | 6,948 – 7,994 | 36,721,673 |
+| | | 500 | 14,027 | 14,007 – 14,344 | 37,078,764 |
+| | | 1000 | 16,529 | 16,294 – 16,632 | 37,454,044 |
+| | | 5000 | 28,161 | 25,774 – 29,032 | 37,920,491 |
+| **Synthetic 80k**| 82,000 | 100 | 6,900 | 6,883 – 6,978 | 41,346,708 |
+| | | 500 | 14,001 | 13,901 – 14,109 | 42,112,677 |
+| | | 1000 | 16,526 | 16,306 – 17,565 | 42,806,715 |
+| | | 5000 | 27,129 | 26,408 – 27,716 | 43,990,168 |
+
+**Key Takeaways:**
+- **Batch Size impact:** Increasing the batch size from 100 to 5,000 yields a ~4x speed increase. We achieved a maximum throughput of **~28,000 points per second** at a batch size of 5,000.
+- **Storage Oddities (`du -sb`):** Because WAL (Write-Ahead Logs) pre-allocates size before TSM compaction runs, disk size checks immediately post-write do not reflect true compressed footprints. Storing 37k rows vs 82k rows only increased disk size by ~12%, proving most of the footprint is fixed overhead.
+
+### 2. Query Latency (`mean` vs `max`)
+Queries were run using `aggregateWindow(createEmpty: false)` over the entire dataset's time range on the `temperature` field. We targeted a strict `< 100ms` SLA.
+
+| Dataset | Time Window | Aggregation | Result Rows | Median (ms) | 95th Percentile (ms) | Max (ms) |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Original** | 1h | mean | 2,163 | 27.5 | 46.6 | 52.1 |
+| **Original** | 1h | max | 2,163 | 26.6 | 39.1 | 49.2 |
+| **Original** | 1d | mean | 101 | 16.7 | 18.6 | 29.2 |
+| **Original** | 1d | max | 101 | 16.7 | 17.9 | 25.3 |
+| **Synthetic 80k**| 1h | mean | 6,606 | 55.2 | 89.5 | 91.4 |
+| **Synthetic 80k**| 1h | max | 6,606 | 52.9 | 87.6 | 89.1 |
+| **Synthetic 80k**| 1d | mean | 286 | 24.3 | 25.3 | 45.4 |
+| **Synthetic 80k**| 1d | max | 286 | 24.1 | 25.4 | 40.0 |
+
+**Key Takeaways:**
+- All queries passed the `< 100ms` target successfully.
+- Querying a 1-hour `mean` window over 80,000 rows resolved with a median of **55.2 ms** (Max: 91.4 ms).
+- The execution time difference between calculating `mean` and `max` over these sets was statistically negligible.
+
+---
+
+## 🗺️ Project Map
 
 | Path | Purpose |
 | --- | --- |
@@ -57,18 +168,22 @@ Use this file for scale, ingestion, and query-performance experiments. It is syn
 | `queries/01`–`06` | Read-only analysis and dashboard queries |
 | `queries/07_downsample_task.flux` | Optional scheduled aggregation, writes to a separate bucket |
 | `tests/` | Offline regression checks and explicit database integration check |
-| `reports/` | Dataset profile, verification evidence, source review |
+| `benchmarks/` | Scripts for throughput, query latency, concurrency, and downsampling |
+| `reports/` | Output logs, verification evidence, and benchmark analysis |
 | `GUIDE.md` | Course lab and presentation guidance |
 
-## Verification
+---
+
+## ✅ Verification & Tests
+
+To ensure your environment behaves exactly as designed:
 
 ```bash
 uv run python -m unittest discover -s tests -v
 uv build
 docker compose config --quiet
-# Requires a running server and a token allowed to create/delete buckets.
-# Creates unique temporary buckets and deletes only those buckets afterward.
+
+# Runs a full integration loop using temporary buckets
 uv run --env-file .env python tests/integration_check.py
 ```
 
-The stack deliberately pins InfluxDB v2 because these exercises use its Flux API and built-in UI. Do not replace the image with `influxdb:latest`; consult the [official v2 installation documentation](https://docs.influxdata.com/influxdb/v2/install/) when changing versions.
