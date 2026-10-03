@@ -40,7 +40,7 @@ python3 datasets/iot-agriculture-2024/extend_to_80k.py
 Strategy, in order:
 
 1. **Clean** — drop empty/unparseable dates, clip `humidity`/`water_level` to 0–100 and `N`/`P`/`K` to ≤ 255 (the source contains a `K = 259` sensor glitch), deduplicate timestamps, sort. Keeps the original `tempreature` column spelling.
-2. **Fit profiles on real data** — per-hour-of-day mean/std for temperature and humidity (daily cycle), a temperature→humidity linear coupling with residual noise, and the observed discrete `N`/`P`/`K` value pools (8–9 values each).
+<!-- 2. **Fit profiles on real data** — per-hour-of-day mean/std for temperature and humidity (daily cycle), a temperature→humidity linear coupling with residual noise, and the observed discrete `N`/`P`/`K` value pools (8–9 values each). -->
 3. **Extend the timeline** — generate one row per 5 minutes past the last real timestamp. Temperature = hourly mean + AR(1) smooth noise; humidity = mean-anchored temp coupling + hourly deviation; water level = mean-reverting walk around 70 with asymmetric pump dynamics (drains −4.0/step when the pump is ON, refills +1.5/step when OFF) so the level oscillates across the pump threshold; `N`/`P`/`K` hold constant for ~1–7 days then jump to another observed discrete value.
 4. **Rule-based actuators with noise** — thresholds are learned from the real data by maximizing Youden's J (currently: fan ON if temp > ~21, pump ON if water level < ~75, watering ON if humidity < ~52), then ~5% of decisions are flipped so behaviour is not perfectly deterministic.
 5. **Validate** — the script prints real-vs-synthetic mean/std for temperature, humidity mean, the fraction of water levels below the pump threshold, and ON-rates for all three actuators.
